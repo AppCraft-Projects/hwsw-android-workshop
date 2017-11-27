@@ -37,6 +37,8 @@ public class NearbyActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayAdapter<RecommendationModel> adapter;
     private RecommendationDatabaseHelper databaseHelper;
+    //TODO: Define GourmetApplication instance
+    //
 
     public static Intent newIntent(Activity activity) {
         Intent intent = new Intent(activity, NearbyActivity.class);
@@ -50,6 +52,8 @@ public class NearbyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nearby);
         setTitle(R.string.nearby_title);
 
+        //TODO: Obtain application instance
+        //
         databaseHelper = RecommendationDatabaseHelper.getInstance(this);
         listView = findViewById(R.id.places_listview);
 
@@ -66,6 +70,8 @@ public class NearbyActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        //TODO: Create a new method that handles fetching models and render them
+        //
         new GetRecomendationTask(this).execute(null, null);
     }
 
@@ -75,6 +81,7 @@ public class NearbyActivity extends AppCompatActivity {
         ActivityCompat.startActivity(this, intent, null);
     }
 
+    //TODO: Delete GetRecommendationTask as we don't use it anymore
     public class GetRecomendationTask extends AsyncTask<Void,Void,List<RecommendationModel>> {
 
         @SuppressWarnings("deprecation")

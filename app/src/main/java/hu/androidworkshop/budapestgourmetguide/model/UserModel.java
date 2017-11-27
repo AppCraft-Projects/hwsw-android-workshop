@@ -5,6 +5,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//TODO: Convert to Kotlin
 public class UserModel {
     public static final String TAG = UserModel.class.getSimpleName();
 
