@@ -65,6 +65,7 @@ public class NearbyAdapter extends ArrayAdapter<RecommendationModel> {
         viewHolder.userPhoto.setImageResource(R.drawable.user_placeholder);
 
         if (viewHolder.foodImageView != null) {
+            //TODO: Replace this to Picasso
             if (!ImageCache.getInstance().contains(recommendation.getImageURL())) {
                 new DownloadImageTask(viewHolder.foodImageView).execute(recommendation.getImageURL());
             } else {
@@ -92,6 +93,7 @@ public class NearbyAdapter extends ArrayAdapter<RecommendationModel> {
         Button detailsButton;
     }
 
+    //TODO: Delete this class
     public static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
         private final WeakReference<ImageView> imageViewWeakReference;

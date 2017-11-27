@@ -37,6 +37,7 @@ public class RecommendationDetailActivity extends AppCompatActivity {
         authorInfo.setText(authorInfoText);
 
         ImageView placePhoto = findViewById(R.id.place_photo);
+        //TODO: Replace this with Picasso
         if (!ImageCache.getInstance().contains(recommendationModel.getImageURL())) {
             new NearbyAdapter.DownloadImageTask(placePhoto).execute(recommendationModel.getImageURL());
         } else {

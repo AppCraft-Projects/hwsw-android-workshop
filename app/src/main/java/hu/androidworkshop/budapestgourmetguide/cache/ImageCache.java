@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO: Delete this class
 public class ImageCache {
 
     private static final ImageCache ourInstance = new ImageCache();
