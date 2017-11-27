@@ -3,24 +3,13 @@ package hu.androidworkshop.budapestgourmetguide.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import hu.androidworkshop.budapestgourmetguide.GourmetApplication;
@@ -28,9 +17,8 @@ import hu.androidworkshop.budapestgourmetguide.R;
 import hu.androidworkshop.budapestgourmetguide.adapter.NearbyAdapter;
 import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel;
 import hu.androidworkshop.budapestgourmetguide.persistence.RecommendationDatabaseHelper;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 import static hu.androidworkshop.budapestgourmetguide.activity.RecommendationDetailActivity.RECOMMENDATION_ID_KEY_BUNDLE;
 
@@ -83,27 +71,16 @@ public class NearbyActivity extends AppCompatActivity {
             progressDialog.show();
         }
 
-        //TODO: Replace direct API client invocation with Repository<RecommendationModel,Integer> call
-        application.getApiClient().getRecommendations().enqueue(new Callback<List<RecommendationModel>>() {
+        application.getRepository().getAll(new Function1<List<? extends RecommendationModel>, Unit>() {
             @Override
-            public void onResponse(Call<List<RecommendationModel>> call, Response<List<RecommendationModel>> response) {
-                if (response.isSuccessful()) {
-                    for(RecommendationModel model : response.body()) {
-                        databaseHelper.addRecommendation(model);
-                    }
-                }
+            public Unit invoke(List<? extends RecommendationModel> recommendationModels) {
                 if (progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
-                renderItems();
-            }
-
-            @Override
-            public void onFailure(Call<List<RecommendationModel>> call, Throwable t) {
-                Log.e(TAG, "Error while fetching recommendations", t);
-                if (progressDialog.isShowing()) {
-                    progressDialog.dismiss();
+                if (recommendationModels != null) {
+                    renderItems(recommendationModels);
                 }
+                return null;
             }
         });
     }
@@ -114,9 +91,9 @@ public class NearbyActivity extends AppCompatActivity {
         ActivityCompat.startActivity(this, intent, null);
     }
 
-    private void renderItems() {
+    private void renderItems(List<? extends RecommendationModel> recommendationModels) {
         adapter.clear();
-        adapter.addAll(databaseHelper.getRecommendations());
+        adapter.addAll(recommendationModels);
         adapter.notifyDataSetChanged();
     }
 }

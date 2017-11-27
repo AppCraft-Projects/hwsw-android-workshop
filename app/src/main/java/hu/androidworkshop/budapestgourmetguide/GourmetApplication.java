@@ -7,16 +7,18 @@ import com.google.gson.GsonBuilder;
 
 import java.util.concurrent.TimeUnit;
 
+import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel;
 import hu.androidworkshop.budapestgourmetguide.network.BGGApiDefinition;
 import hu.androidworkshop.budapestgourmetguide.persistence.RecommendationDatabaseHelper;
+import hu.androidworkshop.budapestgourmetguide.repository.RecommendationRepository;
+import hu.androidworkshop.budapestgourmetguide.repository.Repository;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GourmetApplication extends Application {
 
-    private BGGApiDefinition apiDefinition;
-    //TODO: Define Repository<RecommendationModel,Integer>
+    private Repository<RecommendationModel,Integer> repository;
 
     @Override
     public void onCreate() {
@@ -29,20 +31,18 @@ public class GourmetApplication extends Application {
                 .build();
         Gson gson = new GsonBuilder().create();
 
-        apiDefinition = new Retrofit.Builder()
+        BGGApiDefinition apiDefinition = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okHttpClient)
                 .baseUrl(BuildConfig.API_BASE_URL)
                 .build()
                 .create(BGGApiDefinition.class);
 
-        //TODO: Obtain Repository<RecommendationModel,Integer>
+        repository = new RecommendationRepository(apiDefinition, RecommendationDatabaseHelper.getInstance(this));
         RecommendationDatabaseHelper.getInstance(this).deleteAllPostsAndUsers();
     }
 
-    public BGGApiDefinition getApiClient() {
-        return apiDefinition;
+    public Repository<RecommendationModel,Integer> getRepository() {
+        return repository;
     }
-
-    //TODO: Define getter for Repository<RecommendationModel,Integer>
 }

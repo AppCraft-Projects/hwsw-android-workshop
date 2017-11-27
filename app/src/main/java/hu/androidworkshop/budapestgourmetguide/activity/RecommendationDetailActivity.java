@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import hu.androidworkshop.budapestgourmetguide.GourmetApplication;
 import hu.androidworkshop.budapestgourmetguide.R;
 import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel;
-import hu.androidworkshop.budapestgourmetguide.persistence.RecommendationDatabaseHelper;
 
 public class RecommendationDetailActivity extends AppCompatActivity {
 
@@ -28,8 +28,8 @@ public class RecommendationDetailActivity extends AppCompatActivity {
 
 
         int id = getIntent().getIntExtra(RECOMMENDATION_ID_KEY_BUNDLE, -1);
-        //TODO: Replace direct RecommendationDatabaseHelper invocation with Repository<RecommendationModel,Integer>
-        RecommendationModel recommendationModel = RecommendationDatabaseHelper.getInstance(this).getRecommendationById(id);
+        GourmetApplication application = (GourmetApplication) getApplication();
+        RecommendationModel recommendationModel = application.getRepository().getById(id);
 
         TextView placeName = findViewById(R.id.place_name);
         placeName.setText(recommendationModel.getName());
