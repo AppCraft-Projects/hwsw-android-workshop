@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Budapest Gourmet Guide</string>
+    <string name="nearby_title">Nearby</string>
+    <string name="details_button_title">details</string>
+    <string name="details_activity_title">Details</string>
+</resources>
