@@ -125,17 +125,18 @@ public class RecommendationDatabaseHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     UserModel userModel =
-                            new UserModel()
-                                    .setFirstName(cursor.getString(cursor.getColumnIndex(KEY_USER_FIRST_NAME)))
-                                    .setLastName(cursor.getString(cursor.getColumnIndex(KEY_USER_LAST_NAME)));
+                            new UserModel(
+                                    cursor.getString(cursor.getColumnIndex(KEY_USER_FIRST_NAME)),
+                                    cursor.getString(cursor.getColumnIndex(KEY_USER_LAST_NAME)));
                     RecommendationModel recommendationModel =
-                            new RecommendationModel()
-                                    .setId(cursor.getInt(cursor.getColumnIndex(KEY_RECOMMENDATION_ID)))
-                                    .setImageURL(cursor.getString(cursor.getColumnIndex(KEY_RECOMMENDATION_IMAGE_URL)))
-                                    .setUser(userModel)
-                                    .setLiked(cursor.getInt(cursor.getColumnIndex(KEY_RECOMMENDATION_LIKED)) != 0)
-                                    .setName(cursor.getString(cursor.getColumnIndex(KEY_RECOMMENDATION_NAME)))
-                                    .setShortDescription(cursor.getString(cursor.getColumnIndex(KEY_RECOMMENDATION_SHORT_DESCRIPTION)));
+                            new RecommendationModel(
+                                    cursor.getInt(cursor.getColumnIndex(KEY_RECOMMENDATION_ID)),
+                                    cursor.getString(cursor.getColumnIndex(KEY_RECOMMENDATION_NAME)),
+                                    cursor.getString(cursor.getColumnIndex(KEY_RECOMMENDATION_SHORT_DESCRIPTION)),
+                                    cursor.getString(cursor.getColumnIndex(KEY_RECOMMENDATION_IMAGE_URL)),
+                                    userModel,
+                                    cursor.getInt(cursor.getColumnIndex(KEY_RECOMMENDATION_LIKED)) != 0
+                            );
                     recommendations.add(recommendationModel);
                 } while (cursor.moveToNext());
             }
@@ -217,17 +218,18 @@ public class RecommendationDatabaseHelper extends SQLiteOpenHelper {
         try {
             if (cursor.moveToFirst()) {
                 UserModel userModel =
-                        new UserModel()
-                                .setFirstName(cursor.getString(cursor.getColumnIndex(KEY_USER_FIRST_NAME)))
-                                .setLastName(cursor.getString(cursor.getColumnIndex(KEY_USER_LAST_NAME)));
+                        new UserModel(
+                                cursor.getString(cursor.getColumnIndex(KEY_USER_FIRST_NAME)),
+                                cursor.getString(cursor.getColumnIndex(KEY_USER_LAST_NAME)));
                 recommendationModel =
-                        new RecommendationModel()
-                                .setId(cursor.getInt(cursor.getColumnIndex(KEY_RECOMMENDATION_ID)))
-                                .setImageURL(cursor.getString(cursor.getColumnIndex(KEY_RECOMMENDATION_IMAGE_URL)))
-                                .setUser(userModel)
-                                .setLiked(cursor.getInt(cursor.getColumnIndex(KEY_RECOMMENDATION_LIKED)) != 0)
-                                .setName(cursor.getString(cursor.getColumnIndex(KEY_RECOMMENDATION_NAME)))
-                                .setShortDescription(cursor.getString(cursor.getColumnIndex(KEY_RECOMMENDATION_SHORT_DESCRIPTION)));
+                        new RecommendationModel(
+                                cursor.getInt(cursor.getColumnIndex(KEY_RECOMMENDATION_ID)),
+                                cursor.getString(cursor.getColumnIndex(KEY_RECOMMENDATION_NAME)),
+                                cursor.getString(cursor.getColumnIndex(KEY_RECOMMENDATION_SHORT_DESCRIPTION)),
+                                cursor.getString(cursor.getColumnIndex(KEY_RECOMMENDATION_IMAGE_URL)),
+                                userModel,
+                                cursor.getInt(cursor.getColumnIndex(KEY_RECOMMENDATION_LIKED)) != 0
+                        );
             }
         } catch (Exception e) {
             Log.e(TAG, "Error while fetching database");
