@@ -7,9 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import hu.androidworkshop.budapestgourmetguide.R;
-import hu.androidworkshop.budapestgourmetguide.adapter.NearbyAdapter;
-import hu.androidworkshop.budapestgourmetguide.cache.ImageCache;
 import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel;
 import hu.androidworkshop.budapestgourmetguide.persistence.RecommendationDatabaseHelper;
 
@@ -37,12 +37,11 @@ public class RecommendationDetailActivity extends AppCompatActivity {
         authorInfo.setText(authorInfoText);
 
         ImageView placePhoto = findViewById(R.id.place_photo);
-        //TODO: Replace this with Picasso
-        if (!ImageCache.getInstance().contains(recommendationModel.getImageURL())) {
-            new NearbyAdapter.DownloadImageTask(placePhoto).execute(recommendationModel.getImageURL());
-        } else {
-            placePhoto.setImageBitmap(ImageCache.getInstance().get(recommendationModel.getImageURL()));
-        }
+        Picasso.with(this)
+                .load(recommendationModel.getImageURL())
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .into(placePhoto);
 
         TextView description = findViewById(R.id.place_description);
         description.setText(recommendationModel.getShortDescription());

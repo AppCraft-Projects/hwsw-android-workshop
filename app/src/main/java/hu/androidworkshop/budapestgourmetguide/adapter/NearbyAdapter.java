@@ -1,10 +1,6 @@
 package hu.androidworkshop.budapestgourmetguide.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -16,14 +12,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import hu.androidworkshop.budapestgourmetguide.R;
 import hu.androidworkshop.budapestgourmetguide.activity.NearbyActivity;
-import hu.androidworkshop.budapestgourmetguide.cache.ImageCache;
 import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel;
 
 public class NearbyAdapter extends ArrayAdapter<RecommendationModel> {
@@ -66,11 +59,21 @@ public class NearbyAdapter extends ArrayAdapter<RecommendationModel> {
 
         if (viewHolder.foodImageView != null) {
             //TODO: Replace this to Picasso
-            if (!ImageCache.getInstance().contains(recommendation.getImageURL())) {
-                new DownloadImageTask(viewHolder.foodImageView).execute(recommendation.getImageURL());
-            } else {
-                viewHolder.foodImageView.setImageBitmap(ImageCache.getInstance().get(recommendation.getImageURL()));
-            }
+            Picasso.with(getContext())
+                    .load(recommendation.getImageURL())
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
+                    .into(viewHolder.foodImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d(TAG, "Successfully loaded image from: " + recommendation.getImageURL());
+                        }
+
+                        @Override
+                        public void onError() {
+                            Log.e(TAG, "Error downloading image from " + recommendation.getImageURL());
+                        }
+                    });
         }
 
         viewHolder.detailsButton.setText(R.string.details_button_title);
@@ -93,70 +96,4 @@ public class NearbyAdapter extends ArrayAdapter<RecommendationModel> {
         Button detailsButton;
     }
 
-    //TODO: Delete this class
-    public static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        private final WeakReference<ImageView> imageViewWeakReference;
-        private String url;
-
-        public DownloadImageTask(ImageView imageView) {
-            imageViewWeakReference = new WeakReference<>(imageView);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            url = strings[0];
-            return downloadBitmap(url);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (isCancelled()) {
-                bitmap = null;
-            }
-            if (bitmap != null) {
-                ImageCache.getInstance().put(url, bitmap);
-            }
-
-            if (imageViewWeakReference != null) {
-                ImageView imageView = imageViewWeakReference.get();
-                if (imageView != null) {
-                    if (bitmap != null) {
-                        imageView.setImageBitmap(bitmap);
-                    } else {
-                        Drawable placeholder = imageView.getContext().getDrawable(R.drawable.placeholder);
-                        imageView.setImageDrawable(placeholder);
-                    }
-                }
-            }
-        }
-
-        private Bitmap downloadBitmap(String url) {
-            HttpURLConnection urlConnection = null;
-            try {
-                URL uri = new URL(url);
-                urlConnection = (HttpURLConnection) uri.openConnection();
-                int statusCode = urlConnection.getResponseCode();
-                if (statusCode < 200 && statusCode >= 300) {
-                    return null;
-                }
-
-                InputStream inputStream = urlConnection.getInputStream();
-                if (inputStream != null) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    return bitmap;
-                }
-            } catch (Exception e) {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                Log.e(TAG, "Error downloading image from " + url);
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-            }
-            return null;
-        }
-    }
 }
