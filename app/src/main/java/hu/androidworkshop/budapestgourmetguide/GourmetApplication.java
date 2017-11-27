@@ -16,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class GourmetApplication extends Application {
 
     private BGGApiDefinition apiDefinition;
+    //TODO: Define Repository<RecommendationModel,Integer>
 
     @Override
     public void onCreate() {
@@ -35,10 +36,13 @@ public class GourmetApplication extends Application {
                 .build()
                 .create(BGGApiDefinition.class);
 
+        //TODO: Obtain Repository<RecommendationModel,Integer>
         RecommendationDatabaseHelper.getInstance(this).deleteAllPostsAndUsers();
     }
 
     public BGGApiDefinition getApiClient() {
         return apiDefinition;
     }
+
+    //TODO: Define getter for Repository<RecommendationModel,Integer>
 }

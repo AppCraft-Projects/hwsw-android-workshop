@@ -28,6 +28,7 @@ public class RecommendationDetailActivity extends AppCompatActivity {
 
 
         int id = getIntent().getIntExtra(RECOMMENDATION_ID_KEY_BUNDLE, -1);
+        //TODO: Replace direct RecommendationDatabaseHelper invocation with Repository<RecommendationModel,Integer>
         RecommendationModel recommendationModel = RecommendationDatabaseHelper.getInstance(this).getRecommendationById(id);
 
         TextView placeName = findViewById(R.id.place_name);

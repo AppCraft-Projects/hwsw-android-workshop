@@ -83,6 +83,7 @@ public class NearbyActivity extends AppCompatActivity {
             progressDialog.show();
         }
 
+        //TODO: Replace direct API client invocation with Repository<RecommendationModel,Integer> call
         application.getApiClient().getRecommendations().enqueue(new Callback<List<RecommendationModel>>() {
             @Override
             public void onResponse(Call<List<RecommendationModel>> call, Response<List<RecommendationModel>> response) {
