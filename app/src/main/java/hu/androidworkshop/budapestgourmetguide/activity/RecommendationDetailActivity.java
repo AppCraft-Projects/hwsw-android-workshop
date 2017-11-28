@@ -21,6 +21,8 @@ public class RecommendationDetailActivity extends AppCompatActivity {
         return new Intent(nearbyActivity, RecommendationDetailActivity.class);
     }
 
+    //TODO: Define RecommendationDetailViewModel
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,8 @@ public class RecommendationDetailActivity extends AppCompatActivity {
 
         int id = getIntent().getIntExtra(RECOMMENDATION_ID_KEY_BUNDLE, -1);
         GourmetApplication application = (GourmetApplication) getApplication();
+        //TODO: Obtain ViewModel
+        //TODO: Replace Repository's invocation with ViewModel's invocation
         RecommendationModel recommendationModel = application.getRepository().getById(id);
 
         TextView placeName = findViewById(R.id.place_name);

@@ -26,6 +26,7 @@ public class NearbyActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayAdapter<RecommendationModel> adapter;
     private GourmetApplication application;
+    //TODO: Define NearbyViewModel
 
     public static Intent newIntent(Activity activity) {
         Intent intent = new Intent(activity, NearbyActivity.class);
@@ -40,11 +41,14 @@ public class NearbyActivity extends AppCompatActivity {
         setTitle(R.string.nearby_title);
 
         application = (GourmetApplication) getApplication();
+        //TODO: Obtain NearbyViewModel
+        //TODO: Set NearbyViewModel's Repository
         listView = findViewById(R.id.places_listview);
 
         adapter = new NearbyAdapter(this);
 
 
+        //TODO: Replace this with ViewModel's observation
         application.getRepository().getAll().observe(this, new Observer<List<RecommendationModel>>() {
             @Override
             public void onChanged(@Nullable List<RecommendationModel> recommendationModels) {
