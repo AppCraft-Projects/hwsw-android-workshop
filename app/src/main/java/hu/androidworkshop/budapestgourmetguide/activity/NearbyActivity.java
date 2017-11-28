@@ -28,7 +28,6 @@ public class NearbyActivity extends AppCompatActivity {
 
     private ListView listView;
     private ArrayAdapter<RecommendationModel> adapter;
-    private RecommendationDatabaseHelper databaseHelper;
     private GourmetApplication application;
     private ProgressDialog progressDialog;
 
@@ -47,15 +46,23 @@ public class NearbyActivity extends AppCompatActivity {
         application = (GourmetApplication) getApplication();
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
-        databaseHelper = RecommendationDatabaseHelper.getInstance(this);
+        progressDialog.show();
         listView = findViewById(R.id.places_listview);
 
         adapter = new NearbyAdapter(this);
 
 
-        List<RecommendationModel> models = databaseHelper.getRecommendations();
-        adapter.addAll(models);
-        adapter.notifyDataSetChanged();
+        application.getRepository().getAll(new Function1<List<? extends RecommendationModel>, Unit>() {
+            @Override
+            public Unit invoke(List<? extends RecommendationModel> recommendationModels) {
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+                adapter.addAll(recommendationModels);
+                adapter.notifyDataSetChanged();
+                return null;
+            }
+        });
 
         listView.setAdapter(adapter);
     }

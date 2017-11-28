@@ -1,6 +1,7 @@
 package hu.androidworkshop.budapestgourmetguide;
 
 import android.app.Application;
+import android.arch.persistence.room.Room;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,7 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel;
 import hu.androidworkshop.budapestgourmetguide.network.BGGApiDefinition;
+import hu.androidworkshop.budapestgourmetguide.persistence.RecommendationDatabase;
 import hu.androidworkshop.budapestgourmetguide.persistence.RecommendationDatabaseHelper;
+import hu.androidworkshop.budapestgourmetguide.persistence.dao.RecommendationDao;
 import hu.androidworkshop.budapestgourmetguide.repository.RecommendationRepository;
 import hu.androidworkshop.budapestgourmetguide.repository.Repository;
 import okhttp3.OkHttpClient;
@@ -37,11 +40,15 @@ public class GourmetApplication extends Application {
                 .baseUrl(BuildConfig.API_BASE_URL)
                 .build()
                 .create(BGGApiDefinition.class);
-        //TODO: Obtain RecommendationDao
 
-        //TODO: Give the RecommendationDao as an argument to the c'tor of the repository
-        repository = new RecommendationRepository(apiDefinition, RecommendationDatabaseHelper.getInstance(this));
-        RecommendationDatabaseHelper.getInstance(this).deleteAllPostsAndUsers();
+        RecommendationDao recommendationDao = Room
+                .databaseBuilder(this, RecommendationDatabase.class, RecommendationDatabase.getDATABASE_NAME())
+                .allowMainThreadQueries()
+                .build()
+                .getRecommendationDao();
+
+        repository = new RecommendationRepository(apiDefinition, recommendationDao);
+        recommendationDao.deleteAll();
     }
 
     public Repository<RecommendationModel,Integer> getRepository() {

@@ -3,7 +3,7 @@ package hu.androidworkshop.budapestgourmetguide.repository
 import android.util.Log
 import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel
 import hu.androidworkshop.budapestgourmetguide.network.BGGApiDefinition
-import hu.androidworkshop.budapestgourmetguide.persistence.RecommendationDatabaseHelper
+import hu.androidworkshop.budapestgourmetguide.persistence.dao.RecommendationDao
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,8 +13,7 @@ interface Repository<out T, in IdType> {
     fun getById(id: IdType) : T?
 }
 
-//TODO: Change c'tor signature
-class RecommendationRepository(private val apiDefinition: BGGApiDefinition, private val databaseHelper: RecommendationDatabaseHelper) : Repository<RecommendationModel,Int> {
+class RecommendationRepository(private val apiDefinition: BGGApiDefinition, private val recommendationDao: RecommendationDao) : Repository<RecommendationModel,Int> {
 
     companion object {
         @JvmStatic val TAG: String = RecommendationRepository::class.java.simpleName
@@ -25,8 +24,7 @@ class RecommendationRepository(private val apiDefinition: BGGApiDefinition, priv
             override fun onResponse(call: Call<List<RecommendationModel>>?, response: Response<List<RecommendationModel>>?) {
                 val items = response?.body()
                 items?.forEach {
-                    //TODO: Use the given RecommendationDao
-                    databaseHelper.addRecommendation(it)
+                    recommendationDao.add(it)
                 }
                 callback(items)
             }
@@ -39,5 +37,5 @@ class RecommendationRepository(private val apiDefinition: BGGApiDefinition, priv
     }
 
     //TODO: Use the given RecommendationDao
-    override fun getById(id: Int): RecommendationModel? = databaseHelper.getRecommendationById(id)
+    override fun getById(id: Int): RecommendationModel? = recommendationDao.getById(id)
 }
