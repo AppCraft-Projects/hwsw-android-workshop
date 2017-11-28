@@ -1,7 +1,7 @@
 package hu.androidworkshop.budapestgourmetguide.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,9 +16,6 @@ import hu.androidworkshop.budapestgourmetguide.GourmetApplication;
 import hu.androidworkshop.budapestgourmetguide.R;
 import hu.androidworkshop.budapestgourmetguide.adapter.NearbyAdapter;
 import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel;
-import hu.androidworkshop.budapestgourmetguide.persistence.RecommendationDatabaseHelper;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 import static hu.androidworkshop.budapestgourmetguide.activity.RecommendationDetailActivity.RECOMMENDATION_ID_KEY_BUNDLE;
 
@@ -29,7 +26,6 @@ public class NearbyActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayAdapter<RecommendationModel> adapter;
     private GourmetApplication application;
-    private ProgressDialog progressDialog;
 
     public static Intent newIntent(Activity activity) {
         Intent intent = new Intent(activity, NearbyActivity.class);
@@ -44,53 +40,19 @@ public class NearbyActivity extends AppCompatActivity {
         setTitle(R.string.nearby_title);
 
         application = (GourmetApplication) getApplication();
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setIndeterminate(true);
-        progressDialog.show();
         listView = findViewById(R.id.places_listview);
 
         adapter = new NearbyAdapter(this);
 
 
-        //TODO: Change this to interact with LiveData<List<RecommendationModel>>
-        application.getRepository().getAll(new Function1<List<? extends RecommendationModel>, Unit>() {
+        application.getRepository().getAll().observe(this, new Observer<List<RecommendationModel>>() {
             @Override
-            public Unit invoke(List<? extends RecommendationModel> recommendationModels) {
-                if (progressDialog != null && progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
-                adapter.addAll(recommendationModels);
-                adapter.notifyDataSetChanged();
-                return null;
+            public void onChanged(@Nullable List<RecommendationModel> recommendationModels) {
+                renderItems(recommendationModels);
             }
         });
 
         listView.setAdapter(adapter);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        fetchRecommendations();
-    }
-
-    private void fetchRecommendations() {
-        if (!progressDialog.isShowing()) {
-            progressDialog.show();
-        }
-
-        application.getRepository().getAll(new Function1<List<? extends RecommendationModel>, Unit>() {
-            @Override
-            public Unit invoke(List<? extends RecommendationModel> recommendationModels) {
-                if (progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
-                if (recommendationModels != null) {
-                    renderItems(recommendationModels);
-                }
-                return null;
-            }
-        });
     }
 
     public void itemClicked(RecommendationModel recommendation) {
