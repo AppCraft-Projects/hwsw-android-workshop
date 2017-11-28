@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel;
 import hu.androidworkshop.budapestgourmetguide.network.BGGApiDefinition;
 import hu.androidworkshop.budapestgourmetguide.persistence.RecommendationDatabase;
-import hu.androidworkshop.budapestgourmetguide.persistence.RecommendationDatabaseHelper;
 import hu.androidworkshop.budapestgourmetguide.persistence.dao.RecommendationDao;
 import hu.androidworkshop.budapestgourmetguide.repository.RecommendationRepository;
 import hu.androidworkshop.budapestgourmetguide.repository.Repository;

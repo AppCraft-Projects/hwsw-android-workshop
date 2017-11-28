@@ -38,6 +38,5 @@ class RecommendationRepository(private val apiDefinition: BGGApiDefinition, priv
         })
     }
 
-    //TODO: Use the given RecommendationDao
     override fun getById(id: Int): RecommendationModel? = recommendationDao.getById(id)
 }
