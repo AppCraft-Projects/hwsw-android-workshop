@@ -2,6 +2,7 @@ package hu.androidworkshop.budapestgourmetguide.model
 
 import com.google.gson.annotations.SerializedName
 
+//TODO: Add annotations
 data class RecommendationModel(
         val id: Int,
         val name: String,

@@ -37,7 +37,9 @@ public class GourmetApplication extends Application {
                 .baseUrl(BuildConfig.API_BASE_URL)
                 .build()
                 .create(BGGApiDefinition.class);
+        //TODO: Obtain RecommendationDao
 
+        //TODO: Give the RecommendationDao as an argument to the c'tor of the repository
         repository = new RecommendationRepository(apiDefinition, RecommendationDatabaseHelper.getInstance(this));
         RecommendationDatabaseHelper.getInstance(this).deleteAllPostsAndUsers();
     }

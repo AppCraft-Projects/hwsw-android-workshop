@@ -13,6 +13,7 @@ import java.util.List;
 import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel;
 import hu.androidworkshop.budapestgourmetguide.model.UserModel;
 
+//TODO: Delete this class
 public class RecommendationDatabaseHelper extends SQLiteOpenHelper {
 
     private static RecommendationDatabaseHelper instance;
