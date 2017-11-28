@@ -52,6 +52,7 @@ public class NearbyActivity extends AppCompatActivity {
         adapter = new NearbyAdapter(this);
 
 
+        //TODO: Change this to interact with LiveData<List<RecommendationModel>>
         application.getRepository().getAll(new Function1<List<? extends RecommendationModel>, Unit>() {
             @Override
             public Unit invoke(List<? extends RecommendationModel> recommendationModels) {

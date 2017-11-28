@@ -9,6 +9,7 @@ import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel
 @Dao
 interface RecommendationDao {
 
+    //TODO: Change return type to LiveData<List<RecommendationModel>>
     @Query("SELECT * FROM recommendations")
     fun getAll() : List<RecommendationModel>
 

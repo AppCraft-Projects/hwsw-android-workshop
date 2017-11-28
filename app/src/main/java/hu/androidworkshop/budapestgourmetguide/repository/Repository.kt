@@ -9,6 +9,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 interface Repository<out T, in IdType> {
+    //TODO: Change from callback to return LiveData<List<T>>
     fun getAll(callback: (List<T>?) -> Unit)
     fun getById(id: IdType) : T?
 }
@@ -19,6 +20,7 @@ class RecommendationRepository(private val apiDefinition: BGGApiDefinition, priv
         @JvmStatic val TAG: String = RecommendationRepository::class.java.simpleName
     }
 
+    //TODO: Chage
     override fun getAll(callback: (List<RecommendationModel>?) -> Unit) {
         apiDefinition.getRecommendations().enqueue(object: Callback<List<RecommendationModel>> {
             override fun onResponse(call: Call<List<RecommendationModel>>?, response: Response<List<RecommendationModel>>?) {
