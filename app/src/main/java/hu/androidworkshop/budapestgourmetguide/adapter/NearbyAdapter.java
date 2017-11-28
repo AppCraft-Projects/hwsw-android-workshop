@@ -58,7 +58,6 @@ public class NearbyAdapter extends ArrayAdapter<RecommendationModel> {
         viewHolder.userPhoto.setImageResource(R.drawable.user_placeholder);
 
         if (viewHolder.foodImageView != null) {
-            //TODO: Replace this to Picasso
             Picasso.with(getContext())
                     .load(recommendation.getImageURL())
                     .placeholder(R.drawable.placeholder)

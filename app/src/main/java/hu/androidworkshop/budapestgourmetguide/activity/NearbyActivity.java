@@ -2,6 +2,7 @@ package hu.androidworkshop.budapestgourmetguide.activity;
 
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import hu.androidworkshop.budapestgourmetguide.GourmetApplication;
 import hu.androidworkshop.budapestgourmetguide.R;
 import hu.androidworkshop.budapestgourmetguide.adapter.NearbyAdapter;
 import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel;
+import hu.androidworkshop.budapestgourmetguide.viewmodel.NearbyViewModel;
 
 import static hu.androidworkshop.budapestgourmetguide.activity.RecommendationDetailActivity.RECOMMENDATION_ID_KEY_BUNDLE;
 
@@ -26,7 +28,7 @@ public class NearbyActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayAdapter<RecommendationModel> adapter;
     private GourmetApplication application;
-    //TODO: Define NearbyViewModel
+    private NearbyViewModel viewModel;
 
     public static Intent newIntent(Activity activity) {
         Intent intent = new Intent(activity, NearbyActivity.class);
@@ -41,15 +43,13 @@ public class NearbyActivity extends AppCompatActivity {
         setTitle(R.string.nearby_title);
 
         application = (GourmetApplication) getApplication();
-        //TODO: Obtain NearbyViewModel
-        //TODO: Set NearbyViewModel's Repository
+        viewModel = ViewModelProviders.of(this).get(NearbyViewModel.class);
+        viewModel.setRepository(application.getRepository());
         listView = findViewById(R.id.places_listview);
 
         adapter = new NearbyAdapter(this);
 
-
-        //TODO: Replace this with ViewModel's observation
-        application.getRepository().getAll().observe(this, new Observer<List<RecommendationModel>>() {
+        viewModel.getRecommendations().observe(this, new Observer<List<RecommendationModel>>() {
             @Override
             public void onChanged(@Nullable List<RecommendationModel> recommendationModels) {
                 renderItems(recommendationModels);

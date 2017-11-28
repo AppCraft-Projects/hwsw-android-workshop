@@ -1,5 +1,6 @@
 package hu.androidworkshop.budapestgourmetguide.activity;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import hu.androidworkshop.budapestgourmetguide.GourmetApplication;
 import hu.androidworkshop.budapestgourmetguide.R;
 import hu.androidworkshop.budapestgourmetguide.model.RecommendationModel;
+import hu.androidworkshop.budapestgourmetguide.viewmodel.RecommendationDetailViewModel;
 
 public class RecommendationDetailActivity extends AppCompatActivity {
 
@@ -21,7 +23,7 @@ public class RecommendationDetailActivity extends AppCompatActivity {
         return new Intent(nearbyActivity, RecommendationDetailActivity.class);
     }
 
-    //TODO: Define RecommendationDetailViewModel
+    private RecommendationDetailViewModel viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,9 +33,10 @@ public class RecommendationDetailActivity extends AppCompatActivity {
 
         int id = getIntent().getIntExtra(RECOMMENDATION_ID_KEY_BUNDLE, -1);
         GourmetApplication application = (GourmetApplication) getApplication();
-        //TODO: Obtain ViewModel
-        //TODO: Replace Repository's invocation with ViewModel's invocation
-        RecommendationModel recommendationModel = application.getRepository().getById(id);
+        viewModel = ViewModelProviders.of(this).get(RecommendationDetailViewModel.class);
+        viewModel.setRepository(application.getRepository());
+        viewModel.setId(id);
+        RecommendationModel recommendationModel = viewModel.getRecommendation();
 
         TextView placeName = findViewById(R.id.place_name);
         placeName.setText(recommendationModel.getName());
